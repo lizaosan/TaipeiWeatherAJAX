@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    
+</body>
+</html>
+
+<script>
+
+/* 宣告一個 XMLHttpRequest 物件 */
+var xhr = new XMLHttpRequest();
+
+/* open() 方法與設定請求 */
+/*
+ * {string} 請求方法 (method)
+ * {string} 目標 url
+ * {boolean} 非同步 [async] -- 可選
+ * {string} 使用者 [user] -- 可選
+ * {string} 密碼 [password] -- 可選
+ */
+
+/* 請求方法，目標 */
+xhr.open("GET", "https://gank.io/api/random/data/福利/20");
+
+/* 監聽事件，此範例使用非同步，需監聽 load 事件 */
+xhr.onload = function () {  
+    // 取得回應的 Content-Type 請求頭部信息，來決定要怎麼處理這個回應 */
+    var type = xhr.getResponseHeader("Content-Type");
+
+    // 建構元 (strategy, response)
+    var handler;
+
+    /* 判斷媒體類型 */
+    // 如果回應的是 JSON ，則可以使用JSON,parse() 方法，解析 responseText 屬性。
+    if (type.match(/^application\/json/)) {
+        handler = new Handler(jsonHandler, JSON.parse(xhr.responseText));
+    }
+    // 如果回應的是 XML 或 XHTML ，則使用 responseXML 屬性。
+    else if (type.match(/^application\/xml/)) {
+        handler = new Handler(textHandler, xhr.responseXML);
+    }
+    // 如果回應的是文字 text ，透過 responseText 屬性取得。
+    else {
+        handler = new Handler(textHandler, xhr.responseText);
+    }
+};
+
+
+// 簡易處理 JSON 回應
+function jsonHandler(response) {
+    let data = response.results;
+    // 建立緩衝的文件片段 docFrag
+    let docFrag = document.createDocumentFragment();
+	
+    for (var i = 0, l = data.length; i < l; i++) {
+        var url = data[i].url;
+        var img = document.createElement("img");
+        img.src = url;
+        img.width = 300;
+        // 將 img 添加至 docFrag
+        docFrag.appendChild(img);
+    }
+    // 將含有多個 img 的 docFrag
+    // 一次新增至 HTML 的 body 中
+    document.body.appendChild(docFrag);
+}
+
+/* 發送請求 */
+/* send 方法中的參數，是請求訊息的酬載 (payload) 內容 */
+/* 這次使用 GET 方法，不得送出酬載，因此設為空值 */
+
+xhr.send(null);
+
+</script>

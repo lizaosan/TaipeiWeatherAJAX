@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+  <div id="weather">
+  </div>
+</body>
+</html>
+
+<script>
+
+var xhr = new XMLHttpRequest();
+xhr.open('GET', `https://data.taipei/opendata/datalist/apiAccess?scope=resourceAquire&rid=1f1aaba5-616a-4a33-867d-878142cac5c4
+`, true);
+
+xhr.onload = function() {
+  if (xhr.status >= 200 && xhr.status < 400) {
+  
+    // document.getElementById("weather").innerHTML = this.responseText;
+
+    // console.log(xhr.responseText);
+
+    var data = JSON.parse(this.responseText);
+    console.log(data);
+    // document.getElementById("weather").innerText = data.result.results[0].dataTime;
+
+    var x = data.result.results.length;
+    var a = data.result.results;
+
+    for ( i = 0; i < x; i++) {
+      // document.write(i + " " + data.result.results[i].dataTime + " " + data.result.results[i].locationName + " " + data.result.results[i].value+ "度" + "<br>")
+      document.write(i + " " + a[i].dataTime + " " + a[i].locationName + " " + a[i].value+ "度" + "<br>")
+
+    }
+
+  }
+};
+xhr.send();
+
+</script>
