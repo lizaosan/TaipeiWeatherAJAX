@@ -14,35 +14,22 @@
 </html>
 
 <script>
+  var xhr = new XMLHttpRequest();
+  xhr.open('GET', `https://data.taipei/opendata/datalist/apiAccess?scope=resourceAquire&rid=1f1aaba5-616a-4a33-867d-878142cac5c4`, true);
 
-var xhr = new XMLHttpRequest();
-xhr.open('GET', `https://data.taipei/opendata/datalist/apiAccess?scope=resourceAquire&rid=1f1aaba5-616a-4a33-867d-878142cac5c4
-`, true);
+  xhr.onload = function() {
+    if (xhr.status >= 200 && xhr.status < 400) {
+      var data = JSON.parse(this.responseText);
 
-xhr.onload = function() {
-  if (xhr.status >= 200 && xhr.status < 400) {
-  
-    // document.getElementById("weather").innerHTML = this.responseText;
+      console.log(data);
 
-    // console.log(xhr.responseText);
-
-    var data = JSON.parse(this.responseText);
-    console.log(data);
-    // document.getElementById("weather").innerText = data.result.results[0].dataTime;
-
-    var x = data.result.results.length;
-    var a = data.result.results;
-    var d = document.getElementById('weather');
-
-    for ( i = 0; i < x; i++) {
-      // document.write(i + " " + data.result.results[i].dataTime + " " + data.result.results[i].locationName + " " + data.result.results[i].value+ "度" + "<br>")
-      d.innerHTML = d.innerHTML + i + " " + a[i].dataTime + " " + a[i].locationName + " " + a[i].value+ "度" + "<br>";
-      // document.write(i + " " + a[i].dataTime + " " + a[i].locationName + " " + a[i].value+ "度" + "<br>")
-
+      var x = data.result.results.length;
+      var a = data.result.results;
+      var d = document.getElementById('weather');
+      for ( i = 0; i < x; i++) {
+        d.innerHTML = d.innerHTML + i + " " + a[i].dataTime + " " + a[i].locationName + " " + a[i].value+ "度" + "<br>";
+      }
     }
-
-  }
-};
-xhr.send();
-
+  };
+  xhr.send();
 </script>
