@@ -8,8 +8,9 @@
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
 </head>
 <body>
-  <div id="weather">
-  </div>
+    <h1>台北天氣 AJAX 練習 - jQuery</h1>
+    <div id="weather">
+    </div>
 </body>
 </html>
 
@@ -24,9 +25,10 @@
             success: function (data) {
                 console.log(data);
                 var x = data.result.results.length;
-                var a = data.result.results;   
+                var a = data.result.results;  
+                var d = document.getElementById('weather'); 
                 for ( i = 0; i < x; i++) {
-                    document.write(i + " " + a[i].dataTime + " " + a[i].locationName + " " + a[i].value+ "度" + "<br>")
+                    d.innerHTML = d.innerHTML + i + " " + a[i].dataTime + " " + a[i].locationName + " " + a[i].value+ "度" + "<br>";
                 }
             },
         });

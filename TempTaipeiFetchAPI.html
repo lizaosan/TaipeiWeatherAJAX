@@ -7,14 +7,29 @@
     <title>Document</title>
 </head>
 <body>
-  <h1>台北天氣 AJAX 練習 - 原生 javascript</h1>
-  <div id="weather">
-  </div>
+    <h1>台北天氣 AJAX 練習 - Fetch API</h1>
+    <div id="weather">
+    </div>
 </body>
 </html>
 
 <script>
+    fetch('https://data.taipei/opendata/datalist/apiAccess?scope=resourceAquire&rid=1f1aaba5-616a-4a33-867d-878142cac5c4').then(function(response) {
+        return response.json()
+    }).then(function(data) {
+        console.log(data)
+        var x = data.result.results.length;
+        var a = data.result.results;
+        var d = document.getElementById('weather'); 
+        for ( i = 0; i < x; i++) {
+        // document.write(i + " " + data.result.results[i].dataTime + " " + data.result.results[i].locationName + " " + data.result.results[i].value+ "度" + "<br>")
+        d.innerHTML = d.innerHTML + i + " " + a[i].dataTime + " " + a[i].locationName + " " + a[i].value+ "度" + "<br>";
+        };
+    }).catch(function(err) {
+    });
 
+/*--- vanilla ---*/
+/*
 var xhr = new XMLHttpRequest();
 xhr.open('GET', `https://data.taipei/opendata/datalist/apiAccess?scope=resourceAquire&rid=1f1aaba5-616a-4a33-867d-878142cac5c4
 `, true);
@@ -32,17 +47,14 @@ xhr.onload = function() {
 
     var x = data.result.results.length;
     var a = data.result.results;
-    var d = document.getElementById('weather');
 
     for ( i = 0; i < x; i++) {
       // document.write(i + " " + data.result.results[i].dataTime + " " + data.result.results[i].locationName + " " + data.result.results[i].value+ "度" + "<br>")
-      d.innerHTML = d.innerHTML + i + " " + a[i].dataTime + " " + a[i].locationName + " " + a[i].value+ "度" + "<br>";
-      // document.write(i + " " + a[i].dataTime + " " + a[i].locationName + " " + a[i].value+ "度" + "<br>")
-
+      document.write(i + " " + a[i].dataTime + " " + a[i].locationName + " " + a[i].value+ "度" + "<br>")
     }
-
   }
 };
 xhr.send();
+*/
 
 </script>
