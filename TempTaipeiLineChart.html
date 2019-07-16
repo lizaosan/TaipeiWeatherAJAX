@@ -23,7 +23,6 @@
         const response = await fetch('https://data.taipei/opendata/datalist/apiAccess?scope=resourceAquire&rid=1f1aaba5-616a-4a33-867d-878142cac5c4');
         const data = await response.json();
 
-        // var x = data.result.results.length;
         var a = data.result.results;
 
         var dataSet = [];
@@ -49,10 +48,10 @@
         .attr("width", width)
         .attr("height", height)
 
-        var minX = d3.min(dataSet, function(d){return d.x});
-        var maxX = d3.max(dataSet, function(d){return d.x});
-        var minY = d3.min(dataSet, function(d){return d.y});
-        var maxY = d3.max(dataSet, function(d){return d.y});
+        var minX = d3.min(dataSet, d => d.x);
+        var maxX = d3.max(dataSet, d => d.x);
+        var minY = d3.min(dataSet, d => d.y);
+        var maxY = d3.max(dataSet, d => d.y);
 
         var scaleX = d3.scale.linear()
         .range([0,width])
