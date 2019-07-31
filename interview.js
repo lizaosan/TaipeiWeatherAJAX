@@ -1,0 +1,103 @@
+(async () => {
+    const response = await fetch('https://data.taipei/opendata/datalist/apiAccess?scope=resourceAquire&rid=1f1aaba5-616a-4a33-867d-878142cac5c4'); // 傳入台北市政府天氣資料
+    const data = await response.json(); // 賦予 data 變數，陣列裡的資料
+
+    var a = data.result.results; // 因為陣列裡資料太多，為省方便，做一個通往 results 的捷徑
+
+    var dataSet = []; // 設定一個空陣列來呈現在網頁上的資料
+
+    for (i = 0; i < 24; i++) { // 以 for 迴圈填入空陣列裡的氣溫資料
+        dataSet[i] = { x:i , y: a[i].value };
+    };
+
+    console.log(dataSet)
+
+    var width = 1920 // svg寬度
+    var height = 400 // svg寬度
+    var padding = { // 內距
+    top: 20,
+    right: 20,
+    bottom: 20,
+    left: 20
+    }; // 內距
+    var graphicHeight = height - padding.top - padding.bottom // 圖表高度為svg高度扣掉內距
+
+    var svg = d3.select("body") // 畫布設定
+    .append("svg")
+    .attr("width", width)
+    .attr("height", height)
+
+    var minX = d3.min(dataSet, d => d.x); // 以變數設定畫布上 X 與 Y 軸最少的數值與最多的數值
+    var maxX = d3.max(dataSet, d => d.x);
+    var minY = d3.min(dataSet, d => d.y);
+    var maxY = d3.max(dataSet, d => d.y);
+
+    var scaleX = d3.scale.linear() // 定義比例，讓畫布的 X 與 Y 軸與折線圖自適應最佳呈現大小
+    .range([0,width])
+    .domain([minX,maxX]);
+
+    var scaleY = d3.scale.linear()
+    .range([height,0])
+    .domain([minY-2,maxY]);
+
+    var line = d3.svg.line() // 定義座標
+    .x(function(d){
+        return scaleX(d.x);
+    })
+    .y(function(d){
+        return scaleY(d.y);
+    });
+
+    var axisX = d3.svg.axis() // 定義座標軸上的數字呈現
+    .scale(scaleX)
+    .orient("bottom")
+    .ticks(20)
+    .tickFormat(function(d){
+        var unixTimeZero = Date.parse(a[d].dataTime); // 使得來的時間變成 timestamp 參考 https://blog.csdn.net/yummry/article/details/79175496
+        function formatDate(time)   { // 格式化物件    
+            var year=time.getYear();     
+            var month=time.getMonth()+1;     
+            var date=time.getDate();     
+            var hour=time.getHours();     
+            var minute=time.getMinutes();     
+            var second=time.getSeconds();     
+            return month+"/"+date+" "+hour+"時";     
+        }    
+        var newDate = new Date(unixTimeZero); // 建立 Date 物件
+        return formatDate(newDate);   
+    });
+
+    var axisY = d3.svg.axis()
+    .scale(scaleY)
+    .orient("left")
+    .ticks(10)
+    .tickFormat(function(d){return d+'°C'})
+
+    svg.append('g') // 因為座標軸預設是從上到下從左到右，所以需要移動位置以符合
+    .call(axisX)
+    .attr({
+    'fill':'none',
+    'stroke':'#000',
+    'transform':'translate(45,'+(height-20)+')' 
+    });
+
+    svg.append('g')
+    .call(axisY)
+    .attr({
+    'fill':'#000',
+    'stroke':'#000',
+    'transform':'translate(45,20)'
+    });
+
+    svg.append("path") // 折線圖的折線設定
+    .attr({
+        "d": line(dataSet),
+        "y": 0,
+        "stroke": "#000",
+        "stroke-width": "1px",
+        "fill": "none",
+        'transform':'translate(45,20)'
+    })
+
+    console.log(data);
+})();
